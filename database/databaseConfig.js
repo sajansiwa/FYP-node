@@ -4,8 +4,8 @@ import pg from "pg";
 const database = new pg.Pool({
   host: "localhost",
   user: "postgres",
-  password: "super",
-  database: "hospNavigation",
+  password: "aayush",
+  database: "hospital",
 });
 
 // database.on('connect', () => {

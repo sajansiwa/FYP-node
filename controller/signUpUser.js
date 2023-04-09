@@ -31,13 +31,13 @@ export const SignUpUser = async (req, res) => {
     
     const registeration = await database.query(regUserQuery, newUser);
     
- `  1q`
     mailer(req.body.email, req.body.name);
     sms(smsNumber);
 
     res.status(201).send({ isRegistered: true });
   
   } catch (err) {
+    console.log(err);
     res.status(500).send(err);
   }
 };
