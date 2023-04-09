@@ -1,6 +1,12 @@
 import jwt from "jsonwebtoken";
 import database from "../database/databaseConfig";
-import { fetchAddress, fetchName, fetchNumber, fetchPP, fetchUserQuery } from "../database/queries";
+import {
+  fetchAddress,
+  fetchName,
+  fetchNumber,
+  fetchPP,
+  fetchUserQuery,
+} from "../database/queries";
 const dotenv = require("dotenv");
 import bcrypt from "bcrypt";
 
@@ -9,13 +15,12 @@ dotenv.config();
 export const loginUser = async (req, res) => {
   const { email_id, password } = req.body;
 
-
   try {
     //checking if the user exists in the database
     const users = await database.query(fetchUserQuery, [email_id]);
 
-    if (users.rows[0].email_id === !email_id || email_id === '') {
-      res.status(401)
+    if (users.rows[0].email_id === !email_id || email_id === "") {
+      res.status(401);
     } else {
       const hashedPassword = users.rows[0].password;
 
@@ -37,13 +42,13 @@ export const loginUser = async (req, res) => {
 
         res.cookie("accessToken", token, {
           httpOnly: true,
-          secure: true, 
+          secure: true,
           maxAge: 86400000,
         });
 
-        const name = await database.query(fetchName, [email_id])
-        const address = await database.query(fetchAddress, [email_id])
-        const number = await database.query(fetchNumber, [email_id])
+        const name = await database.query(fetchName, [email_id]);
+        const address = await database.query(fetchAddress, [email_id]);
+        const number = await database.query(fetchNumber, [email_id]);
         // const PP = await database.query(fetchPP, [email_id])
 
         res.status(200).send({
@@ -53,7 +58,6 @@ export const loginUser = async (req, res) => {
           number: number.rows[0].phone_number,
           // image_name: PP.rows[0].image_name
         });
-        
       }
     }
   } catch (err) {
