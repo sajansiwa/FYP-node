@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import database from "../database/databaseConfig";
 import {
+  addToken,
   fetchAddress,
   fetchName,
   fetchNumber,
@@ -13,7 +14,7 @@ import bcrypt from "bcrypt";
 dotenv.config();
 
 export const loginUser = async (req, res) => {
-  const { email_id, password } = req.body;
+  const { email_id, password, fcmtoken } = req.body;
 
   try {
     //checking if the user exists in the database
@@ -50,6 +51,9 @@ export const loginUser = async (req, res) => {
         const address = await database.query(fetchAddress, [email_id]);
         const number = await database.query(fetchNumber, [email_id]);
         // const PP = await database.query(fetchPP, [email_id])
+
+        // add fcm token
+        await database.query(addToken, [fcmtoken, email_id]);
 
         res.status(200).send({
           loggedIn: true,
