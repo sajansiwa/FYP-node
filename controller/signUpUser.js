@@ -27,6 +27,7 @@ export const SignUpUser = async (req, res) => {
       req.body.phoneNumber,
       req.body.address,
       hashedPassword,
+      false,
     ];
 
     const smsNumber = req.body.phoneNumber.startsWith("977")
@@ -45,11 +46,9 @@ export const SignUpUser = async (req, res) => {
       const token = jwt.sign({ email: { email } }, process.env.SECRET_KEY, {
         expiresIn: 50 * 60,
       });
-      mailer(
-        req.body.email,
-        req.body.name,
-        `https://localhost:3000/verify?${token}`
-      );
+      const url = `https://localhost:3000/verify?${token}`;
+      console.log(url);
+      mailer(req.body.email, req.body.name, url);
     } else {
       mailer(req.body.email, req.body.name);
     }
@@ -74,7 +73,8 @@ export const verifyUser = async (req, res) => {
       const response = jwt.verify(token, process.env.SECRET_KEY);
       const { email } = response;
 
-      const respo = await database.query(setVerified, [email]);
+      const respo = await database.query(setVerified, [email.email]);
+      console.log(respo.rows);
       res.status(200).send({
         message: "User verified",
       });
@@ -114,7 +114,7 @@ export const changePassword = async (req, res) => {
       const salt = await bcrypt.genSalt(saltRounds);
       const hashedPassword = await bcrypt.hash(password, salt);
 
-      await database.query(updatePassword, [hashedPassword, email]);
+      await database.query(updatePassword, [hashedPassword, email.email]);
       res.status(200).send({
         message: "Passowrd has been reset, Please login",
       });
