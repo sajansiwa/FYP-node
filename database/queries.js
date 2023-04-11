@@ -1,5 +1,7 @@
-export const regUserQuery = `insert into users (email_id, name, phone_number, address, password) values ($1,$2, $3, $4, $5)`;
-export const fetchUserQuery = `select email_id, password from users where email_id = $1`;
+export const regUserQuery = `insert into users (email_id, name, phone_number, address, password, is_verified) values ($1,$2, $3, $4, $5, $6)`;
+export const addToken = `update users set token = $1 where email_id = $2`;
+export const fetchUserQuery = `select email_id, password, is_verified from users where email_id = $1`;
+export const setVerified = `UPDATE users SET is_verified=true WHERE email_id=$1`;
 export const fetchHospitalLocation =
   "select u.name, l.longitude, l.latitude, email_id from  users u inner join hosp_locations l on u.user_id = l.user_id;";
 export const fetchName = `select name from users where email_id = $1;`;
@@ -25,7 +27,7 @@ export const hospCoordinatesQuery =
 
 export const vUsers = `insert into visited_users (hosp_email, patient_email) values ($1, $2)`;
 
-export const visitedUserDetails = `select u.name, u.email_id, u.phone_number, u.address from users u inner join visited_users v on u.email_id  = v.patient_email;`;
+export const visitedUserDetails = `select name, email_id, phone_number, address, token from users where email_id = $1`;
 export const visited_users = `
 INSERT INTO visited_users (user_email, hospital_email) values ($1, $2);
 SELECT $1 FROM user WHERE user.email = $1;
