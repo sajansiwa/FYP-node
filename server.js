@@ -16,10 +16,8 @@ import { vsRoute } from "./routes/visitedPRoute";
 
 // import http
 
-
 const app = express();
-const server = http.createServer(app)
-
+const server = http.createServer(app);
 
 app.use(cors());
 app.use(cookieParser());

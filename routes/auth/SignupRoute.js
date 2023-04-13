@@ -1,6 +1,7 @@
 import {
   SignUpUser,
   changePassword,
+  saveCoords,
   sendConfirmPassword,
   verifyUser,
 } from "../../controller/signUpUser";

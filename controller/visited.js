@@ -11,18 +11,17 @@ export const visitedUsers = async (req, res) => {
     await database.query(vUsers, [hosp_email, patient_email]);
     // const res = await database.query(visitedUserDetails);
 
-    const user = database.query(visitedUserDetails, patient_email);
-    const hospital = database.query(visitedUserDetails, hosp_email);
-
+    const user = await database.query(visitedUserDetails, [patient_email]);
+    const hospital = await database.query(visitedUserDetails, [hosp_email]);
+    console.log(hospital);
     await sendPushNotification({
-      username: user.name,
-      token: hospital.token,
+      username: user.rows[0].name,
+      token: hospital.rows[0].token,
     });
 
-    res.send({
-      data: {
-        user: user,
-      },
+    res.status(200).send({
+      user: hospital,
+      success: true,
     });
   } catch (err) {
     res.send(err);

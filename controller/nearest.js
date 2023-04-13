@@ -33,17 +33,36 @@ export const nearestHosp = async (req, res) => {
 
     console.log("nearest hospital", nearestHospital);
 
-    const { latitude: hospLatitude, longitude: hospLongitude, name: hospName, email_id: email_id} =
-      nearestHospital;
-    return res
-      .status(200)
-      .send({
-        latitude: hospLatitude,
-        longitude: hospLongitude,
-        name: hospName,
-        email_id: email_id
-      });
+    const {
+      latitude: hospLatitude,
+      longitude: hospLongitude,
+      name: hospName,
+      email_id: email_id,
+    } = nearestHospital;
+    return res.status(200).send({
+      latitude: hospLatitude,
+      longitude: hospLongitude,
+      name: hospName,
+      email_id: email_id,
+    });
   } catch (err) {
     res.send(err);
+  }
+};
+
+export const getAllHosp = async (req, res) => {
+  try {
+    var hosps = [];
+    const response = await database.query(fetchHospitalLocation);
+    hosps = [...response.rows];
+    console.log(hosps);
+    res.send({
+      hosps,
+    });
+  } catch (error) {
+    console.log(`hy i am error ${error}`);
+    res.status(400).send({
+      message: error,
+    });
   }
 };

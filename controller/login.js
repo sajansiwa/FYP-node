@@ -62,6 +62,7 @@ export const loginUser = async (req, res) => {
           name: name.rows[0].name,
           address: address.rows[0].address,
           number: number.rows[0].phone_number,
+          email_id,
           // image_name: PP.rows[0].image_name
           isUserVerified,
         });
