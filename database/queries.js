@@ -43,3 +43,5 @@ select * from visited_users hops
 inner join users u on hops.patient_email = u.email_id
 inner join users usr on hops.patient_email = usr.email_id
 where hops.hosp_email = $1`;
+
+export const markAsCompletedQuery = `update visited_users set is_completed=true where v_id=$1`;
