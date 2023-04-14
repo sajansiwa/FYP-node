@@ -24,14 +24,15 @@ const _storage = multer.diskStorage({
 
 export const upload = multer({ storage: _storage });
 
-
-export const  update = (app) => {
-    app.put("/userDetails/api/update-name",authenticateToken, changeName);
-    app.put("/userDetails/api/update-address", authenticateToken, changeAdd);
-    app.put("/userDetails/api/update-number", authenticateToken, changeNum);
-    app.put("/userDetails/api/update-password", authenticateToken, changePass);
-    app.post("/userDetails/api/update-profile-picture/:id", upload.single('file'), authenticateToken, changePP);
-}
-
-
-
+export const update = (app) => {
+  app.put("/userDetails/api/update-name", authenticateToken, changeName);
+  app.put("/userDetails/api/update-address", authenticateToken, changeAdd);
+  app.put("/userDetails/api/update-number", authenticateToken, changeNum);
+  app.put("/userDetails/api/update-password", authenticateToken, changePass);
+  app.post(
+    "/userDetails/api/update-profile-picture/:id",
+    upload.single("file"),
+    authenticateToken,
+    changePP
+  );
+};

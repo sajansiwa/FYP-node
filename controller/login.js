@@ -7,6 +7,12 @@ import {
   fetchNumber,
   fetchPP,
   fetchUserQuery,
+  updateAddress,
+  updateName,
+  updateNumber,
+  updatePassword,
+  userInfo,
+  userPassword,
 } from "../database/queries";
 const dotenv = require("dotenv");
 import bcrypt from "bcrypt";
@@ -76,4 +82,64 @@ export const loginUser = async (req, res) => {
 
 const comparePassword = async (plaintextPassword, hash) => {
   return await bcrypt.compare(plaintextPassword, hash);
+};
+
+export const userProfile = async (req, res) => {
+  const { email } = req.query;
+  try {
+    const response = await database.query(userInfo, [email]);
+    res.status(200).send(response.rows[0]);
+  } catch (error) {
+    res.status(401).send({
+      error: error,
+    });
+  }
+};
+export const updateUserProfile = async (req, res) => {
+  const { name, address, phoneNumber, email } = req.body;
+  try {
+    console.log(name);
+    await database.query(updateName, [name, email]);
+    await database.query(updateAddress, [address, email]);
+    await database.query(updateNumber, [phoneNumber, email]);
+    const response = await database.query(userInfo, [email]);
+    res.status(200).send(response.rows[0]);
+  } catch (error) {
+    res.status(401).send({
+      error: error,
+    });
+  }
+};
+
+export const updateUserPassword = async (req, res) => {
+  const { currentPassword, password, email } = req.body;
+  try {
+    // compare password
+    // if verified then
+    // hash password
+    const userPass = (await database.query(userPassword, [email])).rows[0]
+      .password;
+
+    const isPasswordCorrect = await comparePassword(currentPassword, userPass);
+    if (isPasswordCorrect) {
+      const saltRounds = 10;
+      const salt = await bcrypt.genSalt(saltRounds);
+      const currentHashedPassword = await bcrypt.hash(password, salt);
+      await database.query(updatePassword, [currentHashedPassword, email]);
+      res.status(200).send({
+        message: "Password Updated",
+      });
+    } else {
+      res.status(404).send({
+        message: "Incorrect Current Passowrd",
+      });
+    }
+    console.log(password);
+  } catch (error) {
+    console.log(error);
+    res.status(401).send({
+      message: "Failed to Update Password",
+      error,
+    });
+  }
 };

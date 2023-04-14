@@ -33,3 +33,13 @@ INSERT INTO visited_users (user_email, hospital_email) values ($1, $2);
 SELECT $1 FROM user WHERE user.email = $1;
 SELECT $2 FROM hosp_locations WHERE hosp_locations.email = $2;
 `;
+
+export const userInfo = `select * from users where email_id=$1`;
+
+export const userPassword = `select password from users where email_id=$1`;
+
+export const incomingQuery = `
+select * from visited_users hops
+inner join users u on hops.patient_email = u.email_id
+inner join users usr on hops.patient_email = usr.email_id
+where hops.hosp_email = $1`;
