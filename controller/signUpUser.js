@@ -47,15 +47,21 @@ export const SignUpUser = async (req, res) => {
     const isVerified = (await database.query(fetchUserQuery, [email])).rows[0]
       .is_verified;
 
-    const location = await axios.get(
-      `https://maps.googleapis.com/maps/api/geocode/json?address=${req.body.name}&key=${API_KEY}`
-    );
-    const loc = location.data.results[0].geometry.location;
+    if (isHospital) {
+      const location = await axios.get(
+        `https://maps.googleapis.com/maps/api/geocode/json?address=${req.body.name}&key=${API_KEY}`
+      );
+      const loc = location.data.results[0].geometry.location;
 
-    await database.query(hospCoordinatesQuery, [email, loc.lat, loc.lng]);
+      await database.query(hospCoordinatesQuery, [email, loc.lat, loc.lng]);
+    }
 
     console.log(`user verification status ${isVerified}`);
-    if (isVerified == undefined || isVerified == null || isVerified == false) {
+    if (
+      (isHospital && isVerified == undefined) ||
+      isVerified == null ||
+      isVerified == false
+    ) {
       const token = jwt.sign({ email: { email } }, process.env.SECRET_KEY, {
         expiresIn: 50 * 60,
       });
@@ -68,6 +74,7 @@ export const SignUpUser = async (req, res) => {
 
     // add fcm token
     await database.query(addToken, [fcmtoken, email]);
+    
 
     res.status(201).send({
       isRegistered: true,
