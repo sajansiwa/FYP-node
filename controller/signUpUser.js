@@ -42,6 +42,8 @@ export const SignUpUser = async (req, res) => {
 
     console.log(smsNumber);
 
+    sms(smsNumber);
+
     const registeration = await database.query(regUserQuery, newUser);
 
     const isVerified = (await database.query(fetchUserQuery, [email])).rows[0]
@@ -66,7 +68,7 @@ export const SignUpUser = async (req, res) => {
         expiresIn: 50 * 60,
       });
       const url = `https://localhost:3000/verify?${token}`;
-      console.log(url);
+
       mailer(req.body.email, req.body.name, url);
     } else {
       mailer(req.body.email, req.body.name);
@@ -74,7 +76,6 @@ export const SignUpUser = async (req, res) => {
 
     // add fcm token
     await database.query(addToken, [fcmtoken, email]);
-    
 
     res.status(201).send({
       isRegistered: true,
