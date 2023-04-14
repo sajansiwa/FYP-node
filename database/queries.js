@@ -45,3 +45,4 @@ inner join users usr on hops.patient_email = usr.email_id
 where hops.hosp_email = $1`;
 
 export const markAsCompletedQuery = `update visited_users set is_completed=true where v_id=$1`;
+export const updateProfileQuery = `update users set image = $1 where email_id = $2`;

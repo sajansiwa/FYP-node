@@ -13,6 +13,7 @@ import { uploadPPRoute } from "./routes/uploadPPRoutes";
 import { getCoRoutes } from "./routes/hospCoorRoutes";
 import { notiRoute } from "./routes/notiRoute";
 import { vsRoute } from "./routes/visitedPRoute";
+import path from "path";
 
 // import http
 
@@ -21,7 +22,7 @@ const server = http.createServer(app);
 
 app.use(cors());
 app.use(cookieParser());
-app.use("/", express.static("profilePictures/"));
+// app.use("/", express.static("profilePictures/"));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
@@ -34,6 +35,8 @@ uploadPPRoute(app);
 getCoRoutes(app);
 notiRoute(app);
 vsRoute(app);
+
+app.use(express.static(path.join(__dirname, "./profilePictures")));
 
 const port = process.env.PORT || 9000;
 

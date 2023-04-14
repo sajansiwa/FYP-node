@@ -1,5 +1,5 @@
-import { authenticateToken } from "../controller/middleware/tokenAuth"
-import { uploadPP } from "../controller/uploadProfilePicture"
+import { authenticateToken } from "../controller/middleware/tokenAuth";
+import { uploadPP } from "../controller/uploadProfilePicture";
 // import { upload } from "./updateDetailsRoute"
 import multer from "multer";
 import fs from "node:fs";
@@ -21,7 +21,6 @@ const _storage = multer.diskStorage({
 
 export const upload = multer({ storage: _storage });
 
-
 export const uploadPPRoute = (app) => {
-    app.post("/api/upload-pp/:id",upload.single('file'), authenticateToken,uploadPP)
-}
+  app.post("/api/upload-pp/:id", upload.single("file"), uploadPP);
+};

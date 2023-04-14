@@ -11,13 +11,21 @@ import {
   updateName,
   updateNumber,
   updatePassword,
+  updateProfileQuery,
   userInfo,
   userPassword,
 } from "../database/queries";
 const dotenv = require("dotenv");
 import bcrypt from "bcrypt";
+const cloudinary = require("cloudinary").v2;
 
 dotenv.config();
+
+cloudinary.config({
+  cloud_name: "dxpp5arsp",
+  api_key: "942432824667949",
+  api_secret: "6ezdDZwefz9SXyXYh-vacYpuTSE",
+});
 
 export const loginUser = async (req, res) => {
   const { email_id, password, fcmtoken } = req.body;
@@ -55,6 +63,7 @@ export const loginUser = async (req, res) => {
         const name = await database.query(fetchName, [email_id]);
         const address = await database.query(fetchAddress, [email_id]);
         const number = await database.query(fetchNumber, [email_id]);
+        const user = (await database.query(userInfo, [email_id])).rows[0];
         // const PP = await database.query(fetchPP, [email_id])
         const isUserVerified = (
           await database.query(fetchUserQuery, [email_id])
@@ -69,6 +78,8 @@ export const loginUser = async (req, res) => {
           address: address.rows[0].address,
           number: number.rows[0].phone_number,
           email_id,
+          user,
+
           // image_name: PP.rows[0].image_name
           isUserVerified,
         });
@@ -97,6 +108,7 @@ export const userProfile = async (req, res) => {
 };
 export const updateUserProfile = async (req, res) => {
   const { name, address, phoneNumber, email } = req.body;
+  // const { image } = req.file;
   try {
     console.log(name);
     await database.query(updateName, [name, email]);
@@ -139,6 +151,24 @@ export const updateUserPassword = async (req, res) => {
     console.log(error);
     res.status(401).send({
       message: "Failed to Update Password",
+      error,
+    });
+  }
+};
+
+export const updateProfilePic = async (req, res) => {
+  try {
+    const file = req.file;
+    const { email } = req.body;
+    const response = await cloudinary.uploader.upload(file.path);
+    await database.query(updateProfileQuery, [response.url, email]);
+    res.status(200).send({
+      message: "Image Uploaded",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(401).send({
+      message: "Image Failed to  Uploaded",
       error,
     });
   }

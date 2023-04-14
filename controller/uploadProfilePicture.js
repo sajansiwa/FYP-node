@@ -8,8 +8,9 @@ import {
 
 export const uploadPP = async (req, res) => {
   try {
+    console.log("uploading");
     const Email = req.params.id;
-    const filename = req.file.filename;
+    // const filename = req.file.filename;
     //    console.log(Email);
     //    console.log(filename);
 
@@ -27,5 +28,3 @@ export const uploadPP = async (req, res) => {
     console.log(err);
   }
 };
-
-
