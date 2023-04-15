@@ -41,8 +41,7 @@ export const userPassword = `select password from users where email_id=$1`;
 export const incomingQuery = `
 select * from visited_users hops
 inner join users u on hops.patient_email = u.email_id
-inner join users usr on hops.patient_email = usr.email_id
-where hops.hosp_email = $1`;
+where hops.hosp_email = $1 and hops.is_completed = $2`;
 
 export const markAsCompletedQuery = `update visited_users set is_completed=true where v_id=$1`;
 export const updateProfileQuery = `update users set image = $1 where email_id = $2`;

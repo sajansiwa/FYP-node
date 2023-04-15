@@ -121,8 +121,8 @@ export const sendConfirmPassword = async (req, res) => {
     const token = jwt.sign({ email: { email } }, process.env.SECRET_KEY, {
       expiresIn: 50 * 60,
     });
-    passwordMailer(email, `https://localhost:3000/password-reset?${token}`);
-    console.log(`https://localhost:3000/password-reset?${token}`);
+    passwordMailer(email, `http://localhost:3000/password-reset?${token}`);
+
     res.status(200).send({
       message: `Password Reset Email has been sent at ${email}`,
     });

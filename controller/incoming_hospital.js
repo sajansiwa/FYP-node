@@ -22,8 +22,11 @@ export const incomingHospital = async (req, res) => {
 export const incoming = async (req, res) => {
   try {
     const { email, type } = req.query;
-    console.log(req.query);
-    const response = await database.query(incomingQuery, [email]);
+    let isCompleted = type;
+    if (type == null) {
+      isCompleted = true;
+    }
+    const response = await database.query(incomingQuery, [email, isCompleted]);
     res.send(response.rows);
   } catch (error) {
     console.log(error);

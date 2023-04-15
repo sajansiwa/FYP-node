@@ -77,6 +77,7 @@ export const loginUser = async (req, res) => {
           name: name.rows[0].name,
           address: address.rows[0].address,
           number: number.rows[0].phone_number,
+          image: user.image,
           email_id,
           user,
 
@@ -162,6 +163,7 @@ export const updateProfilePic = async (req, res) => {
     const file = req.file;
     const { email } = req.body;
     const response = await cloudinary.uploader.upload(file.path);
+    console.log(response);
     await database.query(updateProfileQuery, [response.url, email]);
     res.status(200).send({
       message: "Image Uploaded",
@@ -169,7 +171,7 @@ export const updateProfilePic = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(401).send({
-      message: "Image Failed to  Uploaded",
+      message: "Image Failed to Uploaded",
       error,
     });
   }
