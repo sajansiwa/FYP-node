@@ -85,7 +85,9 @@ export const SignUpUser = async (req, res) => {
 
     res.status(201).send({
       isRegistered: true,
-      message: "Confirmation Email has been sent",
+      message: isHospital
+        ? "Confirmation Email has been sent"
+        : "Account Created!",
     });
   } catch (err) {
     console.log(err);
