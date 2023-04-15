@@ -117,6 +117,7 @@ export const updateUserProfile = async (req, res) => {
     const response = await database.query(userInfo, [email]);
     res.status(200).send(response.rows[0]);
   } catch (error) {
+    console.log(error);
     res.status(401).send({
       error: error,
     });

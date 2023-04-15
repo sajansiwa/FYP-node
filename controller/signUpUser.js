@@ -14,7 +14,7 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import axios from "axios";
 
-export const API_KEY = "AIzaSyDh-hd8fgRHqk9ll9faCCuGA5vjka_XVCU";
+export const API_KEY = "AIzaSyAQalfFPMsCthe7ace-TGjME0mguUiLfNI";
 
 export const SignUpUser = async (req, res) => {
   try {
@@ -53,9 +53,15 @@ export const SignUpUser = async (req, res) => {
       const location = await axios.get(
         `https://maps.googleapis.com/maps/api/geocode/json?address=${req.body.name}&key=${API_KEY}`
       );
-      const loc = location.data.results[0].geometry.location;
-
-      await database.query(hospCoordinatesQuery, [email, loc.lat, loc.lng]);
+      if (location.data == []) {
+        res.status(402).send({
+          isRegistered: false,
+          message: "Failed to get Location Information",
+        });
+      } else {
+        const loc = location.data.results[0].geometry.location;
+        await database.query(hospCoordinatesQuery, [email, loc.lat, loc.lng]);
+      }
     }
 
     console.log(`user verification status ${isVerified}`);
