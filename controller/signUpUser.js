@@ -121,6 +121,7 @@ export const sendConfirmPassword = async (req, res) => {
     const token = jwt.sign({ email: { email } }, process.env.SECRET_KEY, {
       expiresIn: 50 * 60,
     });
+    console.log(`http://localhost:3000/password-reset?${token}`);
     passwordMailer(email, `http://localhost:3000/password-reset?${token}`);
 
     res.status(200).send({
@@ -138,6 +139,7 @@ export const changePassword = async (req, res) => {
     const { token, password } = req.body;
     if (token != null || token != undefined || token !== "") {
       const response = jwt.verify(token, process.env.SECRET_KEY);
+      console.log(`jwt response is ${response}`);
       const { email } = response;
       const saltRounds = 10;
       const salt = await bcrypt.genSalt(saltRounds);
@@ -153,6 +155,7 @@ export const changePassword = async (req, res) => {
       });
     }
   } catch (error) {
+    console.log(error);
     res.status(501).send({
       message: error,
     });
