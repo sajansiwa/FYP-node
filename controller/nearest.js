@@ -29,22 +29,17 @@ export const nearestHosp = async (req, res) => {
 
     const nearestHospital = nearbyHospitals.sort(
       (a, b) => a.distance - b.distance
-    )[0];
+    );
 
     console.log("nearest hospital", nearestHospital);
 
-    const {
-      latitude: hospLatitude,
-      longitude: hospLongitude,
-      name: hospName,
-      email_id: email_id,
-    } = nearestHospital;
-    return res.status(200).send({
-      latitude: hospLatitude,
-      longitude: hospLongitude,
-      name: hospName,
-      email_id: email_id,
-    });
+    // const {
+    //   latitude: hospLatitude,
+    //   longitude: hospLongitude,
+    //   name: hospName,
+    //   email_id: email_id,
+    // } = nearestHospital;
+    return res.status(200).send(nearestHospital);
   } catch (err) {
     res.send(err);
   }

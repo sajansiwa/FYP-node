@@ -45,7 +45,9 @@ export const loginUser = async (req, res) => {
       );
 
       if (!passwordVerification) {
-        res.status(401).send("incorrect password");
+        res.status(401).send({
+          message: "Invalid Password",
+        });
       } else {
         const token = jwt.sign(
           { email_id: { email_id } },
